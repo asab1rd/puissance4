@@ -15,7 +15,8 @@ export const Game = class {
     }
   };
   getPlayers = () => this.players;
-
+  getRows = () => this.numRows;
+  getCols = () => this.numCols;
   createGame = () => {
     let arr = new Array(this.numRows);
     for (let i = 0; i < this.numRows; i++) {
