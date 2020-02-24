@@ -1,18 +1,8 @@
-$(document).ready(function() {
-  console.log("ready");
-});
+import { Game } from "./Game.js";
+import { Player } from "./Player.js";
 
-const createGame = (numRow, numCol) => {
-  let arr = new Array(numRow);
-  for (let i = 0; i < numRow; i++) {
-    arr[i] = new Array(numCol);
-    for (let j = 0; j < arr[i].length; j++) {
-      arr[i][j] = null;
-    }
-  }
-  return arr;
-};
-
-const isCaseEmpty = (arr, index) => {
-  return arr[index] === null;
-};
+const game = new Game(3, 7);
+const player1 = new Player("player1", "red");
+const player2 = new Player("player2", "yellow");
+game.addPlayers([player1, player2]);
+// console.log(game.getPlayers());
