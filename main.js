@@ -39,20 +39,22 @@ function init() {
 
   // IF WE CLICK ON A CIRCLE
   $(".rounded-circle").click(function(e) {
-    console.log(game.getGame());
+    // console.log(game.getGame());
     e.preventDefault();
     let circle = {
       row: $(this).attr("data-row"),
       col: $(this).attr("data-column"),
     };
-    console.log(circle);
+    // console.log(circle);
     let playedCol = null;
     const gameCols = game.getCols();
     playedCol = circle.col >= 0 && circle.col < gameCols ? circle.col : null;
     if (playedCol != null) {
       circle = game.feedRow(playedCol);
       const selector = `[data-row = '${circle.row}'][data-column = '${circle.col}']`;
-      console.log(selector);
+      // console.log(game.actualPlayer);
+      // console.log(game.getGame());
+      console.log(game.connections(circle));
       $(selector).addClass(game.actualPlayer.color);
     }
   });

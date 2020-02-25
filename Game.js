@@ -9,7 +9,7 @@ export const Game = class {
   }
 
   addPlayers = players => {
-    this.actualPlayer = players[1];
+    this.actualPlayer = players[0];
     if (this.players.length <= this.maxPlayers) {
       players.forEach(player => {
         this.players.push(player);
@@ -38,9 +38,9 @@ export const Game = class {
   feedRow = col => {
     for (let i = this.numRows - 1; i >= 0; i--) {
       if (this.isCaseEmpty(this.gameArr[i], col)) {
-        this.gameArr[i][col] = this.actualPlayer.color;
         this.changePlayer();
-        return { col: col, row: i };
+        this.gameArr[i][col] = this.actualPlayer.color;
+        return { col: parseInt(col), row: i };
       }
     }
     return false;
@@ -66,5 +66,46 @@ export const Game = class {
       string += "</p>";
     }
     return string;
+  };
+
+  connections = (element, flag = "all") => {
+    const x = element.col;
+    const y = element.row;
+    console.log(x, y);
+    switch (flag) {
+      case "left":
+        return this.gameArr[y][x - 1];
+        break;
+      case "right":
+        return this.gameArr[y][x + 1];
+        break;
+      case "bottom":
+        return y + 2 > this.numRows ? null : this.gameArr[y + 1][x];
+        break;
+      case "topLeft":
+        return y - 1 < 0 ? null : this.gameArr[y - 1][x - 1];
+        break;
+      case "topRight":
+        return y - 1 < 0 ? null : this.gameArr[y - 1][x + 1];
+        break;
+      case "bottomLeft":
+        return y + 2 > this.numRows ? null : this.gameArr[y + 1][x - 1];
+        break;
+      case "bottomRight":
+        return y + 2 > this.numRows ? null : this.gameArr[y + 1][x + 1];
+        break;
+      default:
+        return {
+          left: this.gameArr[y][x - 1],
+          right: this.gameArr[y][x + 1],
+          // top: y - 1 < 0 ? null : this.gameArr[y - 1][x],
+          bottom: y + 2 > this.numRows ? null : this.gameArr[y + 1][x],
+          topLeft: y - 1 < 0 ? null : this.gameArr[y - 1][x - 1],
+          topRight: y - 1 < 0 ? null : this.gameArr[y - 1][x + 1],
+          bottomLeft: y + 2 > this.numRows ? null : this.gameArr[y + 1][x - 1],
+          bottomRight: y + 2 > this.numRows ? null : this.gameArr[y + 1][x + 1],
+        };
+        break;
+    }
   };
 };
