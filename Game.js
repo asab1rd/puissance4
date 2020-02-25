@@ -4,10 +4,12 @@ export const Game = class {
     this.numRows = numRows;
     this.numCols = numCols;
     this.players = [];
+    this.actualPlayer = null;
     this.gameArr = this.createGame();
   }
 
   addPlayers = players => {
+    this.actualPlayer = players[1];
     if (this.players.length <= this.maxPlayers) {
       players.forEach(player => {
         this.players.push(player);
@@ -27,17 +29,42 @@ export const Game = class {
     }
     return arr;
   };
-
+  generateHtmlFromGame = () => {};
   isCaseEmpty = (rowArr, col) => rowArr[col] === null;
 
-  feedRow = (col, player) => {
-    for (let i = this.numRows - 1; i < 0; i--) {
-      if (isCaseEmpty(this.gameArr[i], col)) {
-        this.gameArr[i][col] = player.color;
+  /**
+   * WILL FEED A "Round" if it is empty, or will feed the round just above
+   */
+  feedRow = col => {
+    for (let i = this.numRows - 1; i >= 0; i--) {
+      if (this.isCaseEmpty(this.gameArr[i], col)) {
+        this.gameArr[i][col] = this.actualPlayer.color;
+        this.changePlayer();
+        return { col: col, row: i };
       }
     }
+    return false;
   };
   getGame = () => this.gameArr;
 
   toString = () => this;
+  changePlayer = () => {
+    this.actualPlayer =
+      this.actualPlayer === this.players[1] ? this.players[0] : this.players[1];
+  };
+  /**
+   * To test With my inputs
+   */
+  totoString = () => {
+    let string = "";
+    for (let i = 0; i < this.numRows; i++) {
+      string += "<p>";
+      for (let j = 0; j < this.numCols; j++) {
+        string += this.gameArr[i][j] === null ? "null" : this.gameArr[i][j];
+        string += " ";
+      }
+      string += "</p>";
+    }
+    return string;
+  };
 };
