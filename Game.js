@@ -39,8 +39,13 @@ export const Game = class {
     for (let i = this.numRows - 1; i >= 0; i--) {
       if (this.isCaseEmpty(this.gameArr[i], col)) {
         this.changePlayer();
-        this.gameArr[i][col] = this.actualPlayer.color;
-        return { col: parseInt(col), row: i };
+        this.gameArr[i][col] = {
+          col: parseInt(col),
+          row: i,
+          player: this.actualPlayer,
+        };
+        this.win(this.gameArr[i][col]);
+        return this.gameArr[i][col];
       }
     }
     return false;
@@ -68,10 +73,67 @@ export const Game = class {
     return string;
   };
 
+  win = element => {
+    let x = element.col;
+    let y = element.row;
+    const actualColor = element.player.color;
+    let win = false;
+    const stack = [];
+    if (x >= 3) {
+      //Left could be ok
+      let match = true;
+      for (let i = 1; i < 4 && match; i++) {
+        const leftConnection = this.gameArr[y][x - i];
+        if (
+          leftConnection === null ||
+          actualColor != leftConnection.player.color
+        ) {
+          match = false;
+        }
+      }
+      win = match;
+    } else if (this.numCols - x >= 4) {
+      let match = true;
+      for (let i = 1; i < 4 && match; i++) {
+        const leftConnection = this.gameArr[y][x + i];
+        if (
+          leftConnection === null ||
+          actualColor != leftConnection.player.color
+        ) {
+          match = false;
+        }
+      }
+      win = match;
+    }
+    if (this.numRows - y >= 4) {
+      let match = true;
+      for (let i = 1; i < 4 && match; i++) {
+        const leftConnection = this.gameArr[y + i][x];
+        console.log(leftConnection);
+        if (
+          leftConnection === null ||
+          actualColor != leftConnection.player.color
+        ) {
+          match = false;
+        }
+      }
+      win = match;
+    }
+
+    if (win === true) {
+      alert(this.actualPlayer + "win");
+    }
+  };
+
+  /***
+   *Obsolete
+   */
   connections = (element, flag = "all") => {
+    if (element === null) {
+      return false;
+    }
     const x = element.col;
     const y = element.row;
-    console.log(x, y);
     switch (flag) {
       case "left":
         return this.gameArr[y][x - 1];

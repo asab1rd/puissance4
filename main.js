@@ -54,8 +54,9 @@ function init() {
       const selector = `[data-row = '${circle.row}'][data-column = '${circle.col}']`;
       // console.log(game.actualPlayer);
       // console.log(game.getGame());
-      console.log(game.connections(circle));
-      $(selector).addClass(game.actualPlayer.color);
+      // game.win(circle);
+      // console.log(circle.player);
+      $(selector).addClass(circle.player.color);
     }
   });
 }
