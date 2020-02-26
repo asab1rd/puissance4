@@ -44,7 +44,9 @@ export const Game = class {
           row: i,
           player: this.actualPlayer,
         };
-        this.win(this.gameArr[i][col]);
+
+        // const res = this.algoTest(this.gameArr[i][col], "yellow", [], "bottom");
+        console.log(this.win2(this.gameArr[i][col], "yellow"));
         return this.gameArr[i][col];
       }
     }
@@ -72,56 +74,38 @@ export const Game = class {
     }
     return string;
   };
-
-  win = element => {
-    let x = element.col;
-    let y = element.row;
-    const actualColor = element.player.color;
-    let win = false;
-    const stack = [];
-    if (x >= 3) {
-      //Left could be ok
-      let match = true;
-      for (let i = 1; i < 4 && match; i++) {
-        const leftConnection = this.gameArr[y][x - i];
-        if (
-          leftConnection === null ||
-          actualColor != leftConnection.player.color
-        ) {
-          match = false;
-        }
-      }
-      win = match;
-    } else if (this.numCols - x >= 4) {
-      let match = true;
-      for (let i = 1; i < 4 && match; i++) {
-        const leftConnection = this.gameArr[y][x + i];
-        if (
-          leftConnection === null ||
-          actualColor != leftConnection.player.color
-        ) {
-          match = false;
-        }
-      }
-      win = match;
+  win2 = (element, color) => {
+    let hasWin = {};
+    const flags = [
+      "left",
+      "right",
+      "bottom",
+      "topRight",
+      "topLeft",
+      "bottomLeft",
+      "bottomRight",
+    ];
+    hasWin = flags.some(flag => {
+      return this.algoTest(element, color, [], flag);
+    });
+    return hasWin;
+  };
+  algoTest = (element, color, arr = [], flag = "left") => {
+    if (element === null || element === undefined) {
+      return false;
     }
-    if (this.numRows - y >= 4) {
-      let match = true;
-      for (let i = 1; i < 4 && match; i++) {
-        const leftConnection = this.gameArr[y + i][x];
-        console.log(leftConnection);
-        if (
-          leftConnection === null ||
-          actualColor != leftConnection.player.color
-        ) {
-          match = false;
-        }
+    const x = element.col;
+    const y = element.row;
+    if (element.player.color == color) {
+      arr.push(element);
+      if (arr.length === 4) {
+        return true;
+      } else {
+        const nextElement = this.connections(this.gameArr[y][x], flag);
+        return this.algoTest(nextElement, color, arr, flag);
       }
-      win = match;
-    }
-
-    if (win === true) {
-      alert(this.actualPlayer + "win");
+    } else {
+      return false;
     }
   };
 
