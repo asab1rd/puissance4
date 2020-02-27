@@ -38,7 +38,6 @@ export const Game = class {
   feedRow = col => {
     for (let i = this.numRows - 1; i >= 0; i--) {
       if (this.isCaseEmpty(this.gameArr[i], col)) {
-        this.changePlayer();
         this.gameArr[i][col] = {
           col: parseInt(col),
           row: i,
@@ -46,33 +45,26 @@ export const Game = class {
         };
 
         // const res = this.algoTest(this.gameArr[i][col], "yellow", [], "bottom");
-        console.log(this.win2(this.gameArr[i][col], "yellow"));
+        if (this.win2(this.gameArr[i][col], this.actualPlayer.color)) {
+          // If It's a win we update players win and we refresh the game
+          this.actualPlayer.win();
+          return { hasWin: true, player: this.actualPlayer };
+        }
+        this.changePlayer();
         return this.gameArr[i][col];
       }
     }
     return false;
   };
   getGame = () => this.gameArr;
-
+  refreshGame = () => {
+    this.gameArr = this.createGame();
+    this.changePlayer();
+  };
   toString = () => this;
   changePlayer = () => {
     this.actualPlayer =
       this.actualPlayer === this.players[1] ? this.players[0] : this.players[1];
-  };
-  /**
-   * To test With my inputs
-   */
-  totoString = () => {
-    let string = "";
-    for (let i = 0; i < this.numRows; i++) {
-      string += "<p>";
-      for (let j = 0; j < this.numCols; j++) {
-        string += this.gameArr[i][j] === null ? "null" : this.gameArr[i][j];
-        string += " ";
-      }
-      string += "</p>";
-    }
-    return string;
   };
   win2 = (element, color) => {
     let hasWin = {};
@@ -90,6 +82,13 @@ export const Game = class {
     });
     return hasWin;
   };
+
+  /**
+   * Algorithm to test If we have 4 consecutive same colors
+   * starting by the given element
+   * @param {object, string , array , string}
+   * @returns {bool}
+   */
   algoTest = (element, color, arr = [], flag = "left") => {
     if (element === null || element === undefined) {
       return false;
@@ -97,10 +96,35 @@ export const Game = class {
     const x = element.col;
     const y = element.row;
     if (element.player.color == color) {
+      // If the played element have the same color that the color we are looking for
+      // We push the element in our array
       arr.push(element);
+      console.log(arr);
       if (arr.length === 4) {
+        // If our array contains 4 elements, we have our four consecutive elements
         return true;
+      } else if (arr.length === 3) {
+        // If array Have 3 elements, we could have played in the middle
+        // We wanna make sure that we dont have an element that has the same color
+        // But placed before our first element
+        if (flag != "bottom") {
+          // We will compare the element before our first element (stocked at arr[0])
+          // The flag will be inverted ex : if we are leftwise it will be rightwise
+          const compare = this.connections(arr[0], this.invertDirection(flag));
+          if (
+            compare != null &&
+            compare != undefined &&
+            compare.player.color === color
+          ) {
+            return this.algoTest(compare, color, arr, flag);
+          }
+        }
+        const nextElement = this.connections(this.gameArr[y][x], flag);
+        return this.algoTest(nextElement, color, arr, flag);
+        // we call it with the new element
       } else {
+        // The next element will be given by a method that take a flag(direction)
+        // And returns the next element in that direction
         const nextElement = this.connections(this.gameArr[y][x], flag);
         return this.algoTest(nextElement, color, arr, flag);
       }
@@ -109,8 +133,41 @@ export const Game = class {
     }
   };
 
-  /***
-   *Obsolete
+  /**
+   * @param { string }
+   * @returns string (direction)
+   */
+  invertDirection = direction => {
+    console.log(direction);
+    switch (direction) {
+      case "left":
+        direction = "right";
+        break;
+      case "right":
+        direction = "left";
+        break;
+      case "topRight":
+        direction = "bottomLeft";
+        break;
+      case "topLeft":
+        direction = "topRight";
+        break;
+      case "bottomRight":
+        direction = "topLeft";
+        break;
+      case "bottomLeft":
+        direction = "topRight";
+        break;
+    }
+    return direction;
+  };
+
+  /**
+   * Given an element (contain its position x,y) we wanna check who is the next element,
+   * If the flag is not specified or is incorrect we will return all the next elements
+   * If the flag is correct, we will take it as a direction
+   * @returns { object, string }
+   * @returns { object }
    */
   connections = (element, flag = "all") => {
     if (element === null) {

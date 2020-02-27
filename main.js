@@ -51,12 +51,18 @@ function init() {
     playedCol = circle.col >= 0 && circle.col < gameCols ? circle.col : null;
     if (playedCol != null) {
       circle = game.feedRow(playedCol);
+      // console.log(circle);
       const selector = `[data-row = '${circle.row}'][data-column = '${circle.col}']`;
-      // console.log(game.actualPlayer);
-      // console.log(game.getGame());
-      // game.win(circle);
-      // console.log(circle.player);
       $(selector).addClass(circle.player.color);
+      if (circle.hasWin) {
+        $("#message").html(circle.player.name + " Won");
+        $("#hasWon")
+          .fadeIn(1000)
+          .fadeOut(1000);
+        $(".rounded-circle").removeClass("yellow red");
+        game.refreshGame();
+        return;
+      }
     }
   });
 }

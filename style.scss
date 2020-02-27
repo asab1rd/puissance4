@@ -57,3 +57,20 @@ p {
   right: 0;
   font-weight: 100;
 }
+.won-container {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba($color: #00023c, $alpha: 0.6);
+  z-index: 3;
+  #message {
+    position: relative;
+    width: 40%;
+    margin: 0 45%;
+    margin-top: 22%;
+    color: #d8d6d6;
+  }
+}

@@ -4,5 +4,7 @@ export const Player = class {
     this.color = color;
     this.numwin = 0;
   }
-  win = () => this.numwin++;
+  win = () => {
+    this.numwin++;
+  };
 };
