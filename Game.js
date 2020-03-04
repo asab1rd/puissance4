@@ -36,6 +36,7 @@ export const Game = class {
    * WILL FEED A "Round" if it is empty, or will feed the round just above
    */
   feedRow = col => {
+    console.log(this.gameArr);
     for (let i = this.numRows - 1; i >= 0; i--) {
       if (this.isCaseEmpty(this.gameArr[i], col)) {
         this.gameArr[i][col] = {
@@ -99,7 +100,6 @@ export const Game = class {
       // If the played element have the same color that the color we are looking for
       // We push the element in our array
       arr.push(element);
-      console.log(arr);
       if (arr.length === 4) {
         // If our array contains 4 elements, we have our four consecutive elements
         return true;
@@ -175,6 +175,7 @@ export const Game = class {
     }
     const x = element.col;
     const y = element.row;
+
     switch (flag) {
       case "left":
         return this.gameArr[y][x - 1];
