@@ -15,14 +15,117 @@
     <link rel="stylesheet" href="style.min.css" />
     <title>Puissance 4</title>
   </head>
-  <body class="">
+  <body class="body-fadein">
     <div class="container-fluid full-screen chose-settings" id="settings">
-      <div class="settings-container"></div>
+      <div class="settings-container">
+        <div class="row justify-content-around">
+          <div class="col-4 player-container player1">
+            <div class="md-form">
+              <input type="text" id="player1" class="form-control" required />
+              <label for="player1">Player 1</label>
+            </div>
+            <div class="row">
+              <h5 class="chose-your-color">Choose your color</h5>
+            </div>
+            <div class="row justify-content-center">
+              <span
+                class="border chose-color elegant-dark rounded-circle"
+                data-color="elegant-dark"
+              ></span>
+              <span
+                class="border chose-color red-darken rounded-circle"
+                data-color="red-darken"
+              ></span>
+              <span
+                class="border chose-color yellow-darken rounded-circle"
+                data-color="yellow-darken"
+              ></span>
+              <span
+                class="border chose-color green-darken rounded-circle"
+                data-color="green-darken"
+              ></span>
+              <span
+                class="border chose-color blue-dark rounded-circle"
+                data-color="blue-dark"
+              ></span>
+              <span
+                class="border chose-color purple-dark rounded-circle"
+                data-color="purple-dark"
+              ></span>
+            </div>
+          </div>
+          <div class="col-4 player-container player2">
+            <div class="md-form">
+              <input type="text" id="player2" class="form-control" required />
+              <label for="player2">Player 2</label>
+            </div>
+            <div class="row">
+              <h5 class="chose-your-color">Choose your color</h5>
+            </div>
+            <div class="row justify-content-center ">
+              <span
+                class="border chose-color elegant-dark rounded-circle"
+                data-color="elegant-dark"
+              ></span>
+              <span
+                class="border chose-color red-darken rounded-circle"
+                data-color="red-darken"
+              ></span>
+              <span
+                class="border chose-color yellow-darken rounded-circle"
+                data-color="yellow-darken"
+              ></span>
+              <span
+                class="border chose-color green-darken rounded-circle"
+                data-color="green-darken"
+              ></span>
+              <span
+                class="border chose-color blue-dark rounded-circle"
+                data-color="blue-dark"
+              ></span>
+              <span
+                class="border chose-color purple-dark rounded-circle"
+                data-color="purple-dark"
+              ></span>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-around">
+          <div class="col-3">
+            <div class="md-form mt-0">
+              <input
+                type="number"
+                min="4"
+                max="12"
+                id="setting-rows"
+                class="form-control"
+                placeholder="min 4 max 12"
+              />
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="md-form mt-0">
+              <input
+                type="text"
+                min="4"
+                max="12"
+                id="setting-cols"
+                class="form-control"
+                placeholder="min 4 max 12"
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            id="submit-settings"
+            class="btn btn-dark btn-md"
+          >
+            PLAY
+          </button>
+        </div>
+      </div>
     </div>
     <div class="container-fluid ">
-      <div class="won-container container-fluid" id="hasWon">
-        <div id="message">Player 1 Won</div>
-      </div>
       <div class="container justify-content-center" id="myGame"></div>
     </div>
     <div class="ft-links">

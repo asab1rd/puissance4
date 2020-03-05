@@ -1,17 +1,34 @@
+$colors: (
+  "base-gray": #d8d6d6 !important,
+  "base-dark-blue": #00023c !important,
+  "red-darken": #b71c1c !important,
+  "elegant-dark": #212121 !important,
+  "yellow-darken": #ff8800 !important,
+  "green-darken": #007e33 !important,
+  "blue-dark": #0099cc !important,
+  "purple-dark": #9933cc !important,
+  "myround": #3f5fb4,
+);
+
 body {
-  background-color: #d8d6d6;
+  background-color: map-get($map: $colors, $key: base-gray);
 }
 
 p {
   display: block;
 }
-// canvas {
-//   border-radius: 50%;
-// }
+@each $name, $color in $colors {
+  .#{$name} {
+    background-color: $color;
+  }
+}
 #myGame {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
   border: 1px #010310 outset;
-  background-color: #00023c;
-  margin-top: 10%;
+  background-color: map-get($map: $colors, $key: base-dark-blue);
+  margin-top: 3%;
   padding-top: 1.5%;
   padding-bottom: 1.5%;
   padding-left: 2%;
@@ -22,10 +39,12 @@ p {
     margin: 0 auto;
   }
   .myround {
+    // max-width: 4rem !important;
     width: 4rem !important;
     height: 4rem;
     padding: 0;
-    background-color: #3f5fb4;
+    // background-color: transparent;
+    transition: background 1s;
     cursor: pointer;
     flex-wrap: nowrap;
     margin: 2px;
@@ -45,7 +64,24 @@ p {
   height: 100%;
   padding-left: 20%;
   padding-right: 20%;
-  background-color: #d8d6d6;
+  background-color: map-get($map: $colors, $key: base-gray);
+  // &.dark {
+  //   background-color: map-get($map: $colors, $key: base-dark-blue);
+  // }
+  .chose-color {
+    min-width: 23%;
+    max-width: 23%;
+    min-height: 60px;
+    padding: 6%;
+    opacity: 0.5;
+    cursor: pointer;
+    &:hover {
+      opacity: 1;
+    }
+    &.active {
+      opacity: 1;
+    }
+  }
 }
 .ft-links,
 .ft-copyright {
@@ -81,5 +117,22 @@ p {
     margin: 0 45%;
     margin-top: 22%;
     color: #d8d6d6;
+  }
+}
+.player-container {
+  margin: 1% auto;
+  width: 50%;
+  justify-content: space-between;
+
+  .player {
+    border: 3px solid map-get($map: $colors, $key: base-dark-blue);
+    padding-top: 5px;
+    color: map-get($map: $colors, $key: base-dark-blue);
+    &.active {
+      padding: 0;
+      background-color: map-get($map: $colors, $key: base-dark-blue);
+      color: #d8d6d6;
+      border: 10px solid map-get($map: $colors, $key: base-dark-blue);
+    }
   }
 }

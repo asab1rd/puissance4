@@ -1,15 +1,54 @@
 body {
-  background-color: #d8d6d6;
+  background-color: #d8d6d6 !important;
 }
 
 p {
   display: block;
 }
 
+.base-gray {
+  background-color: #d8d6d6 !important;
+}
+
+.base-dark-blue {
+  background-color: #00023c !important;
+}
+
+.red-darken {
+  background-color: #b71c1c !important;
+}
+
+.elegant-dark {
+  background-color: #212121 !important;
+}
+
+.yellow-darken {
+  background-color: #ff8800 !important;
+}
+
+.green-darken {
+  background-color: #007e33 !important;
+}
+
+.blue-dark {
+  background-color: #0099cc !important;
+}
+
+.purple-dark {
+  background-color: #9933cc !important;
+}
+
+.myround {
+  background-color: #3f5fb4;
+}
+
 #myGame {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
   border: 1px #010310 outset;
-  background-color: #00023c;
-  margin-top: 10%;
+  background-color: #00023c !important;
+  margin-top: 3%;
   padding-top: 1.5%;
   padding-bottom: 1.5%;
   padding-left: 2%;
@@ -26,7 +65,7 @@ p {
   width: 4rem !important;
   height: 4rem;
   padding: 0;
-  background-color: #3f5fb4;
+  transition: background 1s;
   cursor: pointer;
   flex-wrap: nowrap;
   margin: 2px;
@@ -48,7 +87,24 @@ p {
   height: 100%;
   padding-left: 20%;
   padding-right: 20%;
-  background-color: #d8d6d6;
+  background-color: #d8d6d6 !important;
+}
+
+#settings .chose-color {
+  min-width: 23%;
+  max-width: 23%;
+  min-height: 60px;
+  padding: 6%;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+#settings .chose-color:hover {
+  opacity: 1;
+}
+
+#settings .chose-color.active {
+  opacity: 1;
 }
 
 .ft-links,
@@ -90,4 +146,23 @@ p {
   margin: 0 45%;
   margin-top: 22%;
   color: #d8d6d6;
+}
+
+.player-container {
+  margin: 1% auto;
+  width: 50%;
+  justify-content: space-between;
+}
+
+.player-container .player {
+  border: 3px solid #00023c !important;
+  padding-top: 5px;
+  color: #00023c !important;
+}
+
+.player-container .player.active {
+  padding: 0;
+  background-color: #00023c !important;
+  color: #d8d6d6;
+  border: 10px solid #00023c !important;
 }

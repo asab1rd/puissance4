@@ -17,6 +17,8 @@ export const Game = class {
     }
   };
   getPlayers = () => this.players;
+  getPlayer1 = () => this.players[0];
+  getPlayer2 = () => this.players[1];
   getRows = () => this.numRows;
   getCols = () => this.numCols;
   createGame = () => {
