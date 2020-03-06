@@ -228,7 +228,11 @@
         }
         return direction;
       };
-
+      winMsg = () => {
+        return `<div class="container-fluid won-container" id="hasWon">
+        <div class="row" id="message"></div>
+      </div>`;
+      };
       /**
        * Given an element (contain its position x,y) we wanna check who is the next element,
        * If the flag is not specified or is incorrect we will return all the next elements
@@ -408,10 +412,11 @@
           // localStorage.setItem("game",)
 
           if (circle.hasWin) {
+            $("body").append(game.winMsg());
             $("#message").html(circle.player.name + " Won");
             $("#hasWon")
-              .fadeIn(1000)
-              .fadeOut(1000);
+              .fadeIn(2000)
+              .fadeOut(2000);
             $(".rounded-circle").removeClass(
               `${game.getPlayer1().color} , ${game.getPlayer2().color}`,
             );
