@@ -1,6 +1,6 @@
 $colors: (
-  "base-gray": #d8d6d6 !important,
-  "base-dark-blue": #00023c !important,
+  "base-gray": #d8d6d6,
+  "base-dark-blue": #00023c,
   "red-darken": #b71c1c !important,
   "elegant-dark": #212121 !important,
   "yellow-darken": #ff8800 !important,
@@ -37,11 +37,16 @@ p {
   max-width: fit-content;
   .row {
     margin: 0 auto;
+    flex-wrap: nowrap;
+    position: relative;
+    width: fit-content;
   }
   .myround {
+    position: relative;
     // max-width: 4rem !important;
-    width: 4rem !important;
-    height: 4rem;
+    content: "";
+    width: 3em !important;
+    height: 2em;
     padding: 0;
     // background-color: transparent;
     transition: background 1s;
@@ -123,7 +128,10 @@ p {
   margin: 1% auto;
   width: 50%;
   justify-content: space-between;
-
+  .play-player-container {
+    display: flex;
+    flex-direction: column;
+  }
   .player {
     border: 3px solid map-get($map: $colors, $key: base-dark-blue);
     padding-top: 5px;
@@ -135,4 +143,16 @@ p {
       border: 10px solid map-get($map: $colors, $key: base-dark-blue);
     }
   }
+}
+.score {
+  position: relative;
+  // margin: 40px 0;
+  padding: 20% 28%;
+  font-size: 40px;
+  line-height: 40px;
+  font-weight: 600;
+  font-smoothing: antialiased;
+  display: inline-block;
+  background: map-get($map: $colors, $key: base-dark-blue);
+  color: #d8d6d6;
 }

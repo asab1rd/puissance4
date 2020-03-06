@@ -29,6 +29,10 @@
       getPlayers = () => this.players;
       getPlayer1 = () => this.players[0]; //Player 1
       getPlayer2 = () => this.players[1]; //Player 2
+      setPlayers = players => {
+        this.players[0].numwin = players[0].numwin;
+        this.players[1].numwin = players[1].numwin;
+      };
       getRows = () => this.numRows; // Get Rows
       getCols = () => this.numCols; // Get Cols
       /**
@@ -87,20 +91,38 @@
       };
       undo = () => {
         if (this.lastPlayed) {
-          console.log(this.lastPlayed);
+          // console.log(this.lastPlayed);
           this.gameArr[this.lastPlayed.row][this.lastPlayed.col] = null;
           let lastPlayedHtmlElement = $(
-            $(".row")[this.lastPlayed.row + 1],
+            $(".game-row")[this.lastPlayed.row],
           ).children()[this.lastPlayed.col];
           let itsColor = $(lastPlayedHtmlElement).data("color");
           $(lastPlayedHtmlElement).removeAttr("data-color");
           $(lastPlayedHtmlElement).removeClass(itsColor);
           this.lastPlayed = null;
+          this.changePlayer();
         }
       };
       updateScoreInHtml = () => {
         $("#score-player1").html(this.getPlayer1().numwin);
         $("#score-player2").html(this.getPlayer2().numwin);
+      };
+      updateLocalStorage = () => {
+        let mygameSettings = {
+          player1: this.getPlayer1(),
+          player2: this.getPlayer2(),
+          cols: this.numCols,
+          rows: this.numRows,
+        };
+        localStorage.setItem("mygameHtml", $("#myGame").html());
+        localStorage.setItem("mygame", JSON.stringify(this));
+        localStorage.setItem("mygameSettings", JSON.stringify(mygameSettings));
+
+        // console.log(JSON.parse(localStorage.mygame), this);
+      };
+      resetGame = () => {
+        localStorage.clear();
+        document.location.reload(true);
       };
       toString = () => this;
       changePlayer = () => {
@@ -281,36 +303,20 @@
     /**
      * GAME CREATION & Play Control
      */
-    const game = new Game(settings.rows, settings.cols);
+
+    let game = new Game(settings.rows, settings.cols);
     const player1 = new Player(settings.player1.name, settings.player1.color);
     const player2 = new Player(settings.player2.name, settings.player2.color);
     game.addPlayers([player1, player2]);
-    let actualPlayer = player1;
-    const play = () => {
-      let haveWinner,
-        allFilled = false;
-      let playedCol = null;
-      const gameCols = game.getCols();
-
-      $("#submit").click(function(e) {
-        const playValue = $("#play").val();
-        playedCol = playValue > 0 && playValue < gameCols ? playValue : null;
-        if (playedCol != null && (!haveWinner || !allFilled)) {
-          game.feedRow(playedCol);
-        }
-        $("#play").val("");
-        $("#array").html(game.totoString());
-      });
-      //   console.log(game.totoString());
-    };
 
     init(id);
     function init(id) {
       // APPEND MY GAME TO HTML
       for (let i = 0; i < game.getRows(); i++) {
-        let div = `<div class="row" data-row="${i}">`;
+        let div = `<div class="row game-row justify-content-around" data-row="${i}">`;
+        let coco = parseInt(12 / game.getCols());
         for (let j = 0; j < game.getCols(); j++) {
-          div += `<span class="rounded-circle myround" data-column="${j}" data-row="${i}"> </span>`;
+          div += `<span class="rounded-circle myround col-${coco}" data-column="${j}" data-row="${i}"> </span>`;
         }
         div += "</div>";
         $(id).append(div);
@@ -318,44 +324,73 @@
       }
       const turnHtml = `<div class="container-fluid">
           <div class="row player-container">
-            <div className="play-player-container">
+            <div class="play-player-container">
             <span class="player player1" id="turn-player1">Player 1</span>
-            <div className="score" id="score-player1"></div>
+            <div class="score" id="score-player1"></div>
             </div>
-            <div className="play-player-container">
+            <div class="play-player-container">
             <span class="player player2" id="turn-player2">Player 2</span>
-            <div className="score" id="score-player2"></div>
+            <div class="score" id="score-player2"></div>
             </div>
           </div>
-          <div className="row undo-btn justify-content-around">
+          <div class="row undo-btn justify-content-around">
             <button type="button" class="btn btn-dark" id="undo"> Undo</button>
+            <button type="button" class="btn btn-danger" id="reset"> ! RESET !</button>
           </div>
         </div>`;
-      $(turnHtml).insertBefore(id);
+      /**
+       * TURN HTML
+       */
+      $(turnHtml).insertBefore(".row[data-row='0']");
       $("#turn-player1").html(settings.player1.name);
       $("#turn-player2").html(settings.player2.name);
-      game.updateScoreInHtml();
+      $("#score-player1").addClass(game.getPlayer1().color);
+      $("#score-player2").addClass(game.getPlayer2().color);
+      // console.log($($(".row")[0]));
+
       $("#settings").fadeOut(1000);
-      // $("#myGame").fadeIn(3000);
-      $("#myGame").animate(
-        {
-          width: ["100%", "swing"],
-          height: ["100%", "swing"],
-          opacity: 1,
-        },
-        2000,
-        "linear",
-        () => $("#settings").remove(),
-      );
+      /**
+       * WE WANT TO CHECKIF WE HAVE A PLAYER IN OUR LOCALSTORAGE
+       */
+      if (localStorage.getItem("mygame") != undefined) {
+        let localStorageGame = JSON.parse(localStorage.mygame);
+        game.setPlayers(localStorageGame.players);
+        game.gameArr = localStorageGame.gameArr;
+        // game.changePlayer();
+        if (localStorageGame.actualPlayer.name != game.actualPlayer.name) {
+          game.changePlayer();
+          console.log(game.actualPlayer, localStorageGame.actualPlayer);
+        }
+
+        $("#myGame")
+          .html(localStorage.mygameHtml)
+          .css("opacity", "1");
+      } else {
+        $(id).animate(
+          {
+            opacity: 1,
+          },
+          2000,
+          "linear",
+          () => $("#settings").remove(),
+        );
+      }
+
+      game.updateScoreInHtml();
       $("#undo").click(function(e) {
         e.preventDefault();
         console.log(game.gameArr);
         game.undo();
         console.log(game.gameArr);
       });
+      $("#reset").click(function(e) {
+        e.preventDefault();
+        game.resetGame();
+      });
       // IF WE CLICK ON A CIRCLE
       $(".rounded-circle").click(function(e) {
         e.preventDefault();
+        console.log(game);
         let circle = {
           row: $(this).attr("data-row"),
           col: $(this).attr("data-column"),
@@ -370,6 +405,8 @@
           const selector = `[data-row = '${circle.row}'][data-column = '${circle.col}']`;
           $(selector).addClass(circle.player.color);
           $(selector).data("color", circle.player.color);
+          // localStorage.setItem("game",)
+
           if (circle.hasWin) {
             $("#message").html(circle.player.name + " Won");
             $("#hasWon")
@@ -380,8 +417,9 @@
             );
             game.refreshGame();
             game.updateScoreInHtml();
-            return;
+            // return;
           }
+          game.updateLocalStorage();
         }
       });
     }
@@ -391,43 +429,49 @@
 })(jQuery);
 
 $(function() {
-  let settings = {
-    player1: { name: "player1", color: "red-darken" },
-    player2: { name: "player2", color: "yellow-darken" },
-    cols: 7,
-    rows: 6,
-  };
-  //Chose color
-  $(".player1").click(function(e) {
-    e.preventDefault();
-    $(".player1 .chose-color").removeClass("active");
-    $(e.target).addClass("active");
-    settings.player1.color = $(e.target).data("color");
-  });
-  $(".player2").click(function(e) {
-    e.preventDefault();
-    $(".player2 .chose-color").removeClass("active");
-    $(e.target).addClass("active");
-    settings.player2.color = $(e.target).data("color");
-  });
-
-  //Submit
-  $("#submit-settings").click(function(e) {
-    e.preventDefault();
-    if ($("#player1").val() != "") {
-      settings.player1.name = $("#player1").val(); //We take his name if the input is not empty
-    }
-    if ($("#player2").val() != "") {
-      settings.player2.name = $("#player2").val();
-    }
-    if ($("#setting-cols").val() != "" && $("#setting-rows").val() != "") {
-      settings.cols = $("#setting-cols").val();
-      settings.rows = $("#setting-rows").val();
-    } //We take his name if the input is not empty
-    // $("#settings").fadeOut(300);
-
+  if (localStorage.mygameSettings != undefined) {
+    $("#settings").remove();
+    let settings = JSON.parse(localStorage.mygameSettings);
     $("#body").FourInARow(settings);
+  } else {
+    let settings = {
+      player1: { name: "player1", color: "red-darken" },
+      player2: { name: "player2", color: "yellow-darken" },
+      cols: 7,
+      rows: 6,
+    };
 
-    // $("#settings").remove();
-  });
+    //Chose color
+    $(".player1").click(function(e) {
+      e.preventDefault();
+      $(".player1 .chose-color").removeClass("active");
+      $(e.target).addClass("active");
+      settings.player1.color = $(e.target).data("color");
+    });
+    $(".player2").click(function(e) {
+      e.preventDefault();
+      $(".player2 .chose-color").removeClass("active");
+      $(e.target).addClass("active");
+      settings.player2.color = $(e.target).data("color");
+    });
+
+    //Submit
+    $("#submit-settings").click(function(e) {
+      e.preventDefault();
+      if ($("#player1").val() != "") {
+        settings.player1.name = $("#player1").val(); //We take his name if the input is not empty
+      }
+      if ($("#player2").val() != "") {
+        settings.player2.name = $("#player2").val();
+      }
+      if ($("#setting-cols").val() != "" && $("#setting-rows").val() != "") {
+        settings.cols = $("#setting-cols").val();
+        settings.rows = $("#setting-rows").val();
+      } //We take his name if the input is not empty
+      // $("#settings").fadeOut(300);
+
+      $("#body").FourInARow(settings);
+      // $("#settings").remove();
+    });
+  }
 });
