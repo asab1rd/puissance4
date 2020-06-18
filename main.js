@@ -171,6 +171,7 @@
             // If array Have 3 elements, we could have played in the middle
             // We wanna make sure that we dont have an element that has the same color
             // But placed before our first element
+
             if (flag != "bottom") {
               // We will compare the element before our first element (stocked at arr[0])
               // The flag will be inverted ex : if we are leftwise it will be rightwise
