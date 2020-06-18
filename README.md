@@ -1,4 +1,4 @@
 # puissance4
 
 ## Description
-Jeu de puissance 4 développé en utilisant du Vanilla.js
+Jeu de puissance 4 développé en utilisant Jquery et Sass
